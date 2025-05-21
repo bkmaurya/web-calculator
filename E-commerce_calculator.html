@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-commerce Selling Price Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+        .calculator-container {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .input-section {
+            flex: 1;
+            min-width: 300px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .results-section {
+            flex: 1;
+            min-width: 300px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 4px;
+            margin-top: 10px;
+            width: 100%;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .results-table td {
+            font-weight: bold;
+        }
+        .platform-selection {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .platform-btn {
+            flex: 1;
+            padding: 10px;
+            text-align: center;
+            background-color: #e0e0e0;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        .platform-btn.active {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .note {
+            font-size: 13px;
+            color: #666;
+            margin-top: 20px;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <h1>E-commerce Selling Price Calculator</h1>
+    
+    <div class="calculator-container">
+        <div class="input-section">
+            <h2>Input Details</h2>
+            
+            <div class="platform-selection">
+                <button id="meesho-btn" class="platform-btn active" onclick="selectPlatform('meesho')">Meesho</button>
+                <button id="flipkart-btn" class="platform-btn" onclick="selectPlatform('flipkart')">Flipkart</button>
+                <button id="amazon-btn" class="platform-btn" onclick="selectPlatform('amazon')">Amazon</button>
+                <button id="custom-btn" class="platform-btn" onclick="selectPlatform('custom')">Custom</button>
+            </div>
+            
+            <div class="form-group">
+                <label for="costPrice">Cost Price (₹)</label>
+                <input type="number" id="costPrice" value="180">
+            </div>
+            
+            <div class="form-group">
+                <label for="referralFees">Referral Fees (₹)</label>
+                <input type="number" id="referralFees" value="0">
+            </div>
+            
+            <div class="form-group">
+                <label for="shippingFees">Shipping Fees (₹)</label>
+                <input type="number" id="shippingFees" value="75">
+            </div>
+            
+            <div class="form-group">
+                <label for="packagingFees">Packaging Fees (₹)</label>
+                <input type="number" id="packagingFees" value="20">
+            </div>
+            
+            <div class="form-group">
+                <label for="otherFees">Other Fees (₹)</label>
+                <input type="number" id="otherFees" value="25">
+            </div>
+            
+            <div class="form-group">
+                <label for="gstPercentage">GST (%)</label>
+                <input type="number" id="gstPercentage" value="15">
+            </div>
+            
+            <div class="form-group">
+                <label for="profitPercentage">Profit (%)</label>
+                <input type="number" id="profitPercentage" value="20">
+            </div>
+            
+            <div class="form-group">
+                <label for="rtoPercentage">RTO Percentage (%)</label>
+                <input type="number" id="rtoPercentage" value="20">
+            </div>
+            
+            <button id="calculate-btn" onclick="calculateSellingPrice()">Calculate</button>
+        </div>
+        
+        <div class="results-section">
+            <h2>Results</h2>
+            
+            <table>
+                <tr>
+                    <th>Detail</th>
+                    <th>Amount (₹)</th>
+                </tr>
+                <tr>
+                    <td>Cost Price</td>
+                    <td id="result-costPrice">180.00</td>
+                </tr>
+                <tr>
+                    <td>Referral Fees</td>
+                    <td id="result-referralFees">0.00</td>
+                </tr>
+                <tr>
+                    <td>Shipping Fees</td>
+                    <td id="result-shippingFees">75.00</td>
+                </tr>
+                <tr>
+                    <td>Packaging Fees</td>
+                    <td id="result-packagingFees">20.00</td>
+                </tr>
+                <tr>
+                    <td>Other Fees</td>
+                    <td id="result-otherFees">25.00</td>
+                </tr>
+                <tr>
+                    <td>GST Amount</td>
+                    <td id="result-gstAmount">18.00</td>
+                </tr>
+                <tr>
+                    <td><strong>Total Fees</strong></td>
+                    <td id="result-totalFees"><strong>138.00</strong></td>
+                </tr>
+                <tr>
+                    <td>Profit Percentage</td>
+                    <td id="result-profitPercentage">20.00%</td>
+                </tr>
+                <tr>
+                    <td>RTO Percentage</td>
+                    <td id="result-rtoPercentage">20.00%</td>
+                </tr>
+            </table>
+            
+            <table class="results-table">
+                <tr>
+                    <th colspan="2">Pricing Details</th>
+                </tr>
+                <tr>
+                    <td>Selling Price Without RTO</td>
+                    <td id="sellingPriceWithoutRTO">₹381.60</td>
+                </tr>
+                <tr>
+                    <td>Selling Price With RTO</td>
+                    <td id="sellingPriceWithRTO">₹477.00</td>
+                </tr>
+                <tr>
+                    <td>Net Profit</td>
+                    <td id="netProfit" style="color: green;">₹63.60</td>
+                </tr>
+            </table>
+            
+            <p class="note">Formula: Selling Price Without RTO = Cost Price + Total Fees + (Profit% × (Cost Price + Total Fees))</p>
+            <p class="note">Formula: Selling Price With RTO = Selling Price Without RTO ÷ (1 - RTO%)</p>
+            <p class="note">Formula: Net Profit Without RTO = Selling Price Without RTO - (Cost Price + Total Fees)</p>
+        </div>
+    </div>
+
+    <script>
+        // Initialize the calculator
+        window.onload = function() {
+            calculateSellingPrice();
+        };
+        
+        function selectPlatform(platform) {
+            // Reset all buttons
+            document.querySelectorAll('.platform-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Activate the selected button
+            document.getElementById(platform + '-btn').classList.add('active');
+            
+            // Set default values based on platform
+            if (platform === 'meesho') {
+                document.getElementById('referralFees').value = 0;
+                document.getElementById('shippingFees').value = 75;
+                document.getElementById('packagingFees').value = 20;
+                document.getElementById('otherFees').value = 25;
+                document.getElementById('gstPercentage').value = 15;
+                document.getElementById('profitPercentage').value = 20;
+            } else if (platform === 'flipkart' || platform === 'amazon') {
+                document.getElementById('referralFees').value = 45;
+                document.getElementById('shippingFees').value = 75;
+                document.getElementById('packagingFees').value = 20;
+                document.getElementById('otherFees').value = 25;
+                document.getElementById('gstPercentage').value = 15;
+                document.getElementById('profitPercentage').value = 20;
+            }
+            
+            // Calculate selling price
+            calculateSellingPrice();
+        }
+        
+        function calculateSellingPrice() {
+            // Get input values
+            const costPrice = parseFloat(document.getElementById('costPrice').value) || 0;
+            const referralFees = parseFloat(document.getElementById('referralFees').value) || 0;
+            const shippingFees = parseFloat(document.getElementById('shippingFees').value) || 0;
+            const packagingFees = parseFloat(document.getElementById('packagingFees').value) || 0;
+            const otherFees = parseFloat(document.getElementById('otherFees').value) || 0;
+            const gstPercentage = parseFloat(document.getElementById('gstPercentage').value) || 0;
+            const profitPercentage = parseFloat(document.getElementById('profitPercentage').value) || 0;
+            const rtoPercentage = parseFloat(document.getElementById('rtoPercentage').value) || 0;
+            
+            // Calculate GST amount
+            const gstAmount = ((referralFees + shippingFees + packagingFees + otherFees) * gstPercentage / 100);
+            
+            // Calculate total fees
+            const totalFees = referralFees + shippingFees + packagingFees + otherFees + gstAmount;
+            
+            // Calculate selling price without RTO
+            const sellingPriceWithoutRTO = costPrice + totalFees + (profitPercentage/100 * (costPrice + totalFees));
+            
+            // Calculate selling price with RTO
+            const sellingPriceWithRTO = sellingPriceWithoutRTO / (1 - rtoPercentage/100);
+            
+            // Calculate net profit without RTO
+            const netProfit = sellingPriceWithoutRTO - (costPrice + totalFees);
+
+            // Update results
+            document.getElementById('result-costPrice').textContent = costPrice.toFixed(2);
+            document.getElementById('result-referralFees').textContent = referralFees.toFixed(2);
+            document.getElementById('result-shippingFees').textContent = shippingFees.toFixed(2);
+            document.getElementById('result-packagingFees').textContent = packagingFees.toFixed(2);
+            document.getElementById('result-otherFees').textContent = otherFees.toFixed(2);
+            document.getElementById('result-gstAmount').textContent = gstAmount.toFixed(2);
+            document.getElementById('result-totalFees').textContent = totalFees.toFixed(2);
+            document.getElementById('result-profitPercentage').textContent = profitPercentage.toFixed(2) + '%';
+            document.getElementById('result-rtoPercentage').textContent = rtoPercentage.toFixed(2) + '%';
+            
+            document.getElementById('sellingPriceWithoutRTO').textContent = '₹' + sellingPriceWithoutRTO.toFixed(2);
+            document.getElementById('sellingPriceWithRTO').textContent = '₹' + sellingPriceWithRTO.toFixed(2);
+            document.getElementById('netProfit').textContent = '₹' + netProfit.toFixed(2);
+        }
+    </script>
+</body>
+</html>
